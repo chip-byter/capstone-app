@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
-class Home(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+class Home(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
         
         # self.font_title = ctk.CTkFont(family="Courier New", size=100, weight="bold")
         
