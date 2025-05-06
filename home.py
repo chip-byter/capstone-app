@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
 class Home(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, controller):
         super().__init__(parent)
         
         # self.font_title = ctk.CTkFont(family="Courier New", size=100, weight="bold")
@@ -19,7 +19,7 @@ class Home(ctk.CTkFrame):
         self.search_field = ctk.CTkEntry(self.transactions)
         self.search_field.grid(row=0, column=0, padx=5, pady=5, columnspan=2, sticky="new")
 
-        self.search_btn = ctk.CTkButton(self.transactions, text="Search")
+        self.search_btn = ctk.CTkButton(self.transactions, text="Search", command=lambda: controller.show_frame("Books"))
         self.search_btn.grid(row=0, column=2, padx=5, pady=5, sticky="nw")
 
         self.lend_btn = ctk.CTkButton(self.transactions, text="Lend a Book")
