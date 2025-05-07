@@ -1,6 +1,11 @@
 import sqlite3
 
 class Database:
+    """
+    ---
+    
+    - create_table(table_name)
+    """
     def __init__(self):
         
         self.connect = sqlite3.connect("library.db")
@@ -8,66 +13,114 @@ class Database:
         print("Database connected!")
 
     def create_table(self, table_name: str, columns: tuple):
-        
-        query = f"CREATE TABLE {table_name} {columns}"
-
-        self.cursor.execute(query)
-        self.connect.commit() 
-        print(f"{table_name} created successfully!")
-
+        query = f"CREATE TABLE {table_name} ({columns})"
+        try:
+            self.cursor.execute(query)
+            self.connect.commit() 
+            print(f"{table_name} created successfully!")
+        except sqlite3.Error as e:
+            if e == "no such table":
+                print(f"{table_name} does not exists!")
         
         # try:
         #     self.cursor.execute("CREATE TABLE")
     
     def get_table(self, table: str):
         query = f"SELECT * FROM {table}"
-        self.cursor.execute(query)
-        result = self.cursor.fetchall()
-        for row in result:
-            print(row)
+        try: 
+            self.cursor.execute(query)
+            
+            # return self.cursor.fetchall()
+            print(self.cursor.fetchall())
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
+
 
     def insert_row(self, table: str, data: dict):
         columns = ", ".join(data.keys())
         placeholders = ", ".join((["?"] * len(data)))
         values = tuple(data.values())
-
         query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders})"
-        self.cursor.execute(query, values)
-        self.connect.commit()
-        print(f"Data successfully inserted in the {table}")
+
+        try: 
+            self.cursor.execute(query, values)
+            self.connect.commit()
+            print(f"Data successfully inserted in the {table}")
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
+            
 
     def update_row(self, table: str, data_to_change: dict, condition: str):
         data_set = ", ".join([f"{column} = {value}" for column, value in data_to_change.items()])
-        
         query = f"UPDATE {table} SET {data_set} WHERE {condition};"
-        self.cursor.execute(query)
-        self.connect.commit()
-        print(f"Data row updated successfully!")
-    
+        try:
+            self.cursor.execute(query)
+            self.connect.commit()
+            print(f"Data row updated successfully!")
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
+
     def delete_row(self, table: str, condition: str):
         query = f"DELETE FROM {table} WHERE {condition}"
+        try:
+            self.cursor.execute(query)
+            self.connect.commit()
+            print(f"Row deleted successfully!")
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
 
-        self.cursor.execute(query)
-        self.connect.commit()
-        print(f"Row deleted successfully!")
-    
     def search_row(self, table: str, condition: str):
-        
         query = f"SELECT * FROM {table} WHERE {condition}"
+        try:
+            self.cursor.execute(query)
+            self.connect.commit()
+            result = self.cursor.fetchall()
+            for each_row in result:
+                print(result)
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
+
+    def delete_table(self, table: str):
+        query = f"DROP TABLE IF EXISTS {table}"
+        try: 
+            self.cursor.execute(query)
+            self.connect.commit()
+            print(f"{table} is deleted successfully!")
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
+    
+    def query(self, q:str):
+        try:
+            self.cursor.execute(q)
+            self.connect.commit()
+            results = self.cursor.fetchall()
+            print(results)
+        except sqlite3.Error as e:
+            print(f"An error has occured: {e}")
 
 
 if __name__ == "__main__":
     app = Database()
     # app.create_table("books_table", "(id text, title text, author text)")
-    data = {"id": "20", 
-            "title": "1984", 
-            "author": "George Orwell"}
-    app.insert_row("books_table", data)
-    # app.delete_row("books_table", "title LIKE '%Hallows'")
-    # app.delete_row("books_table", "id=8")
-
-    app.get_table("books_table")
-    # app.update_row("books_table", {"id" : "5"}, "title LIKE '%Phoenix'")
-
+    data = {"title": "The Catcher in the Rye", 
+            "author": "J.D. Salinger"}
     
+    # app.create_table("books_table", ("id INTEGER PRIMARY KEY, title TEXT, author TEXT"))
+    # app.insert_row("books_table", data)
+    # app.delete_row("books_table",  "id = 9")
+
+    # app.get_table("books_table")
+    # app.query("SELECT count(*) > 0 FROM sqlite_master WHERE type='table'")
+    
+    # app.update_row("books_table", {"id" : "5"}, "title LIKE '%Phoenix'")
+    query = "asd"
+    app.cursor.execute("SELECT title, author FROM books_table WHERE title LIKE ? or author LIKE ?", ("%" + query + "%", "%" + query + "%") )
+    result = app.cursor.fetchall()
+    if len(result) == 0:
+        print(f"No result for '{query}'")
+    
+    else:
+        for each_row in result:
+            print(each_row)
+
     
