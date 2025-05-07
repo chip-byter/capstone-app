@@ -45,6 +45,7 @@ class Books(ctk.CTkFrame):
 
         self.db.cursor.execute("SELECT title, author FROM books_table WHERE title LIKE ? OR author LIKE ?", ("%" + q + "%", "%" + q + "%"))
         results = self.db.cursor.fetchall()
+
         if len(results) == 0:
             self.results_frame.grid_remove()
             self.no_result = ctk.CTkFrame(self)
@@ -53,11 +54,14 @@ class Books(ctk.CTkFrame):
             self.no_result.grid_rowconfigure(0, weight=1)
             self.no_result.grid_rowconfigure(1, weight=1)
 
-            self.message = ctk.CTkLabel(self.no_result, text=f"Sorry, there's no result for {q}.", font=("Helvetica", 20, "bold"))
+            self.message = ctk.CTkLabel(self.no_result, text=f"Sorry, there's no result for '{q}'.", font=("Helvetica", 20, "bold"))
             self.message.grid(row=0, column=0, sticky="sew")
             self.sub_message = ctk.CTkLabel(self.no_result, text=f"Please check your spelling or enter a specific book title or author.", font=("Helvetica", 13, "italic"))
             self.sub_message.grid(row=1, column=0, sticky="new")
+            
         else:
+            target_frame.grid()
+            self.no_result.grid_remove()
             col = 0
             row = 0
             
