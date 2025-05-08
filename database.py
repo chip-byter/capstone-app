@@ -98,29 +98,3 @@ class Database:
         except sqlite3.Error as e:
             print(f"An error has occured: {e}")
 
-
-if __name__ == "__main__":
-    app = Database()
-    # app.create_table("books_table", "(id text, title text, author text)")
-    data = {"title": "The Catcher in the Rye", 
-            "author": "J.D. Salinger"}
-    
-    # app.create_table("books_table", ("id INTEGER PRIMARY KEY, title TEXT, author TEXT"))
-    # app.insert_row("books_table", data)
-    # app.delete_row("books_table",  "id = 9")
-
-    # app.get_table("books_table")
-    # app.query("SELECT count(*) > 0 FROM sqlite_master WHERE type='table'")
-    
-    # app.update_row("books_table", {"id" : "5"}, "title LIKE '%Phoenix'")
-    query = "asd"
-    app.cursor.execute("SELECT title, author FROM books_table WHERE title LIKE ? or author LIKE ?", ("%" + query + "%", "%" + query + "%") )
-    result = app.cursor.fetchall()
-    if len(result) == 0:
-        print(f"No result for '{query}'")
-    
-    else:
-        for each_row in result:
-            print(each_row)
-
-    
