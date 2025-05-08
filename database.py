@@ -1,11 +1,6 @@
 import sqlite3
 
 class Database:
-    """
-    ---
-    
-    - create_table(table_name)
-    """
     def __init__(self):
         
         self.connect = sqlite3.connect("library.db")
@@ -21,10 +16,8 @@ class Database:
         except sqlite3.Error as e:
             if e == "no such table":
                 print(f"{table_name} does not exists!")
-        
-        # try:
-        #     self.cursor.execute("CREATE TABLE")
-    
+
+
     def get_table(self, table: str):
         query = f"SELECT * FROM {table}"
         try: 
@@ -60,6 +53,7 @@ class Database:
         except sqlite3.Error as e:
             print(f"An error has occured: {e}")
 
+
     def delete_row(self, table: str, condition: str):
         query = f"DELETE FROM {table} WHERE {condition}"
         try:
@@ -68,6 +62,7 @@ class Database:
             print(f"Row deleted successfully!")
         except sqlite3.Error as e:
             print(f"An error has occured: {e}")
+
 
     def search_row(self, table: str, condition: str):
         query = f"SELECT * FROM {table} WHERE {condition}"
@@ -80,6 +75,7 @@ class Database:
         except sqlite3.Error as e:
             print(f"An error has occured: {e}")
 
+
     def delete_table(self, table: str):
         query = f"DROP TABLE IF EXISTS {table}"
         try: 
@@ -89,12 +85,3 @@ class Database:
         except sqlite3.Error as e:
             print(f"An error has occured: {e}")
     
-    def query(self, q:str):
-        try:
-            self.cursor.execute(q)
-            self.connect.commit()
-            results = self.cursor.fetchall()
-            print(results)
-        except sqlite3.Error as e:
-            print(f"An error has occured: {e}")
-

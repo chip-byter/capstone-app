@@ -18,16 +18,20 @@ class Home(ctk.CTkFrame):
 
         self.search_field = ctk.CTkEntry(self.transactions)
         self.search_field.grid(row=0, column=0, padx=5, pady=5, columnspan=2, sticky="new")
+        self.search_field.bind("<Map>", self.search_field_focus)
+        self.search_field.bind("<Return>", lambda event: controller.show_frame("Books"))
 
         self.search_btn = ctk.CTkButton(self.transactions, text="Search", command=lambda: controller.show_frame("Books"))
         self.search_btn.grid(row=0, column=2, padx=5, pady=5, sticky="nw")
 
-        self.lend_btn = ctk.CTkButton(self.transactions, text="Lend a Book")
+        self.lend_btn = ctk.CTkButton(self.transactions, text="Lend a Book", command=lambda: controller.scan_frame("Lending", 5000))
         self.lend_btn.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
         
-        self.return_btn = ctk.CTkButton(self.transactions, text="Return a Book")
+        self.return_btn = ctk.CTkButton(self.transactions, text="Return a Book", command=lambda: controller.scan_frame("Returning", 5000))
         self.return_btn.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
         
         self.add_btn = ctk.CTkButton(self.transactions, text="Add a Book")
         self.add_btn.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
         
+    def search_field_focus(self, event):
+        self.search_field.focus_set()

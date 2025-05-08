@@ -1,8 +1,6 @@
-import os
 import customtkinter as ctk
 from database import Database
 from PIL import Image
-
 
 class Books(ctk.CTkFrame):
     def __init__(self, parent, controller, home):
@@ -25,6 +23,7 @@ class Books(ctk.CTkFrame):
         self.search_field = ctk.CTkEntry(self.header_frame)
         self.search_field.grid(row=0, column=0, padx=(0, 5), pady=5, columnspan=2, sticky="new")
         
+        self.search_field.bind("<Return>", lambda event: self.search_query(self.search_field.get(), self.results_frame))
       
         self.search_btn = ctk.CTkButton(self.header_frame, text="Search",  command=lambda: self.search_query(self.search_field.get(), self.results_frame))
         self.search_btn.grid(row=0, column=2, padx=5, pady=5, sticky="nw")
@@ -84,8 +83,6 @@ class BookCard(ctk.CTkFrame):
         self.path = path
         self.default_image_path = "images/default_cover.png"
 
-        
-        # if os.path.exists(self.path):
         try:    
             self.image = ctk.CTkImage(dark_image=Image.open(self.path), size=(145, 217))
             self.book_cover = ctk.CTkLabel(self, text="", image=self.image) 
@@ -107,9 +104,6 @@ class BookCard(ctk.CTkFrame):
         self.book_author = ctk.CTkLabel(self.book_metadata, text=self.author)
         self.book_author.grid(row=1, column=0, sticky="nsew")
 
-
-
-        
 
 if __name__ == "__main__":
     title = "The Little Prince".lower()
